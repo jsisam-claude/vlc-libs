@@ -5,5 +5,17 @@ libvlcjni      branch=libvlcjni-3.x  commit=81bb02ba48dcad32550e0626139a387b3c30
 medialibrary   commit=8c56e26c625d757994cffeea84d2a0a2e6033dee  origin=https://code.videolan.org/videolan/medialibrary
 remoteaccess   commit=2dcf214a1b215416767a057ab7bc3913ecc1b57b  origin=https://code.videolan.org/videolan/remoteaccess
 sqlite         release=sqlite-autoconf-3460100  sha512=a5ba5af9c8d6440d39ba67e3d5903c165df3f1d111e299efbe7c1cca4876d4d5aecd722e0133670daa6eb5cbf8a85c6a3d9852ab507a393615fb5245a3e1a743
+# Pruned contribs vendored as source trees from OFFICIAL repositories
+# (see contrib-src/*/.vendored for tag+commit):
+contrib/ffmpeg     8.1.2   github.com/FFmpeg/FFmpeg           tag n8.1.2
+contrib/ass        0.17.5  github.com/libass/libass           tag 0.17.5
+contrib/freetype2  2.13.1  github.com/freetype/freetype       tag VER-2-13-1
+contrib/fribidi    1.0.12  github.com/fribidi/fribidi         tag v1.0.12
+contrib/harfbuzz   14.2.1  github.com/harfbuzz/harfbuzz       tag 14.2.1
+contrib/ogg        1.3.6   github.com/xiph/ogg                tag v1.3.6
+contrib/ebml       1.4.5   github.com/Matroska-Org/libebml    tag release-1.4.5
+contrib/matroska   1.7.1   github.com/Matroska-Org/libmatroska tag release-1.7.1
+# Supplement (no official GitHub; official release archives via fetch-contribs.sh):
+# gnutls 3.8.13, nettle 3.10.2, gmp 6.3.0, libiconv 1.17, libdvbpsi 1.3.3
 # Toolchain expectations (not vendored here): gradle 9.3.1 (sha256-pinned in
 # vlc-android/buildsystem/compile.sh), Android NDK 21.4.7075529 for VLC 3.
