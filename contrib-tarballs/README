@@ -1,0 +1,2 @@
+Source tarball cache for VLC contribs. Populate with ../fetch-contribs.sh and commit.
+Every archive is SHA-512-verified by vlc/contrib at extract time.

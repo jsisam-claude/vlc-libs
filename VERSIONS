@@ -1,0 +1,9 @@
+# Pinned upstream revisions vendored in / consumed with this repository.
+# Sources of truth: vlc-android buildsystem scripts at the fork's import commit.
+vlc            branch=3.0.x  commit=df010408cc1f91becb0845e12e40498a5eefb0c6  origin=https://github.com/videolan/vlc (mirror of code.videolan.org/videolan/vlc)
+libvlcjni      branch=libvlcjni-3.x  commit=81bb02ba48dcad32550e0626139a387b3c30af04  origin=https://code.videolan.org/videolan/libvlcjni
+medialibrary   commit=8c56e26c625d757994cffeea84d2a0a2e6033dee  origin=https://code.videolan.org/videolan/medialibrary
+remoteaccess   commit=2dcf214a1b215416767a057ab7bc3913ecc1b57b  origin=https://code.videolan.org/videolan/remoteaccess
+sqlite         release=sqlite-autoconf-3460100  sha512=a5ba5af9c8d6440d39ba67e3d5903c165df3f1d111e299efbe7c1cca4876d4d5aecd722e0133670daa6eb5cbf8a85c6a3d9852ab507a393615fb5245a3e1a743
+# Toolchain expectations (not vendored here): gradle 9.3.1 (sha256-pinned in
+# vlc-android/buildsystem/compile.sh), Android NDK 21.4.7075529 for VLC 3.
