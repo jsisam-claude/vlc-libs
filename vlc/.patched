@@ -1,0 +1,21 @@
+source: libvlcjni@81bb02ba48dcad32550e0626139a387b3c30af04 libvlc/patches
+0001-compat-Workaround-sendmsg-bug-on-android.patch
+0002-libvlc-events-Add-callbacks-for-record.patch
+0003-network-tls-Handle-errors-from-older-kernels.patch
+0004-access_output-file-Add-error-dialog-for-write-open.patch
+0005-libvlc-media_player-Add-record-method.patch
+0006-input-es_out-set-video-exclusive.patch
+0007-stream_ReadLine-increase-line-length-limit.patch
+0008-input-Extract-attachment-also-when-preparsing.patch
+0009-input-display-discoverer-preparsers-logs.patch
+0010-media_player-backport-fast-seek-argument.patch
+0011-audiotrack-rework-DynamicsProcessing-stop.patch
+0012-freetype-android-process-formatted-text-nodes.patch
+0013-keystore-use-the-system-keystore-from-the-first-try.patch
+0014-keystore-return-false-when-interrupted.patch
+0015-modules-access-handle-vlc_credential_get-interruptio.patch
+0016-access-add-a-cache-helper.patch
+0017-dsm-use-the-cache-helper.patch
+0018-smb2-use-the-cache-helper.patch
+0019-upnp-android-implement-net-intf-priority.patch
+0020-upnp-add-and-use-a-callback-listener-interface.patch

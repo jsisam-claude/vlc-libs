@@ -22,7 +22,6 @@ GNU ?= http://ftpmirror.gnu.org/gnu
 SF := https://downloads.sourceforge.net/project
 VIDEOLAN := http://downloads.videolan.org/pub/videolan
 CONTRIB_VIDEOLAN := http://downloads.videolan.org/pub/contrib
-VIDEOLAN_GIT := https://code.videolan.org
 GITHUB := https://github.com
 GNUGPG := https://www.gnupg.org/ftp/gcrypt
 XIPH := https://ftp.osuosl.org/pub/xiph/releases
@@ -181,7 +180,7 @@ clang_major_is = $(shell echo false)
 gcc_at_least = $(shell echo false)
 gcc_at_most  = $(shell echo false)
 gcc_major_is = $(shell echo false)
-ifneq ($(findstring clang, $(shell $(CC) --version 2>/dev/null | grep -qi clang && echo "clang")),)
+ifneq ($(findstring clang, $(shell $(CC) --version)),)
 HAVE_CLANG := 1
 CLANG_VERSION := $(shell $(CC) --version | head -1 | grep -o '[0-9]\+\.' | head -1 | cut -d '.' -f 1)
 clang_at_least = $(shell [ $(CLANG_VERSION) -ge $(1) ] && echo true)
@@ -407,7 +406,6 @@ UNPACK = $(RM) -R $@ \
 	$(foreach f,$(filter %.tar.gz %.tgz,$^), && tar $(TAR_VERBOSE)xzfo $(f)) \
 	$(foreach f,$(filter %.tar.bz2,$^), && tar $(TAR_VERBOSE)xjfo $(f)) \
 	$(foreach f,$(filter %.tar.xz,$^), && tar $(TAR_VERBOSE)xJfo $(f)) \
-	$(foreach f,$(filter %.tar.zst,$^), && tar $(TAR_VERBOSE)xfo $(f)) \
 	$(foreach f,$(filter %.zip,$^), && unzip $(ZIP_QUIET) $(f) $(UNZIP_PARAMS))
 UNPACK_DIR = $(patsubst %.tar,%,$(basename $(notdir $<)))
 APPLY = (cd $(UNPACK_DIR) && patch -fp1) <
@@ -576,12 +574,12 @@ distclean: clean
 	$(RM) config.mak
 	unlink Makefile
 
-PREBUILT_URL=http://download.videolan.org/pub/videolan/contrib/$(HOST)/vlc-contrib-$(HOST)-latest.tar.zst
+PREBUILT_URL=http://download.videolan.org/pub/videolan/contrib/$(HOST)/vlc-contrib-$(HOST)-latest.tar.bz2
 
-vlc-contrib-$(HOST)-latest.tar.zst:
+vlc-contrib-$(HOST)-latest.tar.bz2:
 	$(call download,$(PREBUILT_URL))
 
-prebuilt: vlc-contrib-$(HOST)-latest.tar.zst
+prebuilt: vlc-contrib-$(HOST)-latest.tar.bz2
 	$(RM) -r $(PREFIX)
 	-$(UNPACK)
 	mv $(HOST) $(PREFIX)
@@ -604,7 +602,7 @@ package: install
 ifneq ($(notdir $(PREFIX)),$(HOST))
 	(cd tmp && mv $(notdir $(PREFIX)) $(HOST))
 endif
-	tar -c -C tmp $(HOST)/ | zstd --quiet --force --threads=0 -12 -o ../vlc-contrib-$(HOST)-$(DATE).tar.zst
+	(cd tmp && tar c $(HOST)/) | bzip2 -c > ../vlc-contrib-$(HOST)-$(DATE).tar.bz2
 
 list:
 	@echo All packages:

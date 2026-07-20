@@ -9,7 +9,6 @@ Codecs:
  * Fix Speex leaks and packetization issues
  * Fix WebVTT CSS parsing and error handling
  * Fix FLAC and HEVC packetizer edge cases
- * Fix AudioToolbox MIDI synthesizer crash on macOS 26+
 
 Demuxers:
  * Add support for CEA-708 closed captions in MP4
@@ -33,7 +32,6 @@ Service Discovery:
 Video Output:
  * Fix Direct3D11 adjust filter and texture leaks
  * Fix MediaCodec crop validation
- * Super Resolution scaling with Moore Threads GPUs
 
 Windows:
  * Support NV12 DirectShow capture

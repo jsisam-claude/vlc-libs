@@ -1,6 +1,6 @@
 # Pinned upstream revisions vendored in / consumed with this repository.
 # Sources of truth: vlc-android buildsystem scripts at the fork's import commit.
-vlc            branch=3.0.x  commit=df010408cc1f91becb0845e12e40498a5eefb0c6  origin=https://github.com/videolan/vlc (mirror of code.videolan.org/videolan/vlc)
+vlc            branch=3.0.x  commit=ac6c2a405d652b5576128ceb9fec2c342f0e83ec  origin=https://github.com/videolan/vlc (mirror of code.videolan.org/videolan/vlc; libvlcjni VLC_TESTED_HASH; android patch stack applied, see vlc/.patched)
 libvlcjni      branch=libvlcjni-3.x  commit=81bb02ba48dcad32550e0626139a387b3c30af04  origin=https://code.videolan.org/videolan/libvlcjni
 medialibrary   commit=8c56e26c625d757994cffeea84d2a0a2e6033dee  origin=https://code.videolan.org/videolan/medialibrary
 remoteaccess   commit=2dcf214a1b215416767a057ab7bc3913ecc1b57b  origin=https://code.videolan.org/videolan/remoteaccess

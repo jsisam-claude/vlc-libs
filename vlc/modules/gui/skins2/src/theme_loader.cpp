@@ -135,7 +135,6 @@ bool ThemeLoader::extract( const std::string &fileName )
     if( unarchive( fileName, tempPath ) == false )
     {
         msg_Err( getIntf(), "extraction from %s failed", fileName.c_str() );
-        deleteTempFiles( tempPath );
         return false;
     }
 

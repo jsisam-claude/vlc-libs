@@ -23,4 +23,13 @@ rm -rf "$ROOT/vlc"
 mv "$TMP" "$ROOT/vlc"
 trap - EXIT
 echo "$SHA" > "$ROOT/vlc/.vendored"
+# optional second argument: a directory of patches to apply (e.g. the
+# libvlcjni android patch stack) — recorded in vlc/.patched
+if [ -n "$2" ] && [ -d "$2" ]; then
+    for p in "$2"/*.patch; do
+        ( cd "$ROOT/vlc" && git apply "$p" ) || { echo "patch failed: $p"; exit 1; }
+    done
+    { echo "patches from: $2"; ls "$2"; } > "$ROOT/vlc/.patched"
+    echo "applied $(ls "$2"/*.patch | wc -l) patches (recorded in vlc/.patched)"
+fi
 echo "vlc/ now at $SHA — update VERSIONS, review and commit."

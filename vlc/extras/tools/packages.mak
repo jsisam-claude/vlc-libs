@@ -55,12 +55,9 @@ GETTEXT_URL=$(GNU)/gettext/gettext-$(GETTEXT_VERSION).tar.gz
 HELP2MAN_VERSION=1.47.6
 HELP2MAN_URL=$(GNU)/help2man/help2man-$(HELP2MAN_VERSION).tar.xz
 
-MESON_VERSION=1.10.0
+MESON_VERSION=0.63.0
 MESON_URL=https://github.com/mesonbuild/meson/releases/download/$(MESON_VERSION)/meson-$(MESON_VERSION).tar.gz
 
 NINJA_VERSION=1.11.1
 NINJA_BUILD_NAME=$(NINJA_VERSION).g95dee.kitware.jobserver-1
 NINJA_URL=https://github.com/Kitware/ninja/archive/refs/tags/v$(NINJA_BUILD_NAME).tar.gz
-
-ZSTD_VERSION=1.5.7
-ZSTD_URL=https://github.com/facebook/zstd/releases/download/v$(ZSTD_VERSION)/zstd-$(ZSTD_VERSION).tar.gz

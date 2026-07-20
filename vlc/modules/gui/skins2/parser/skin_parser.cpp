@@ -27,9 +27,9 @@
 #include <math.h>
 
 SkinParser::SkinParser( intf_thread_t *pIntf, const std::string &rFileName,
-                        const std::string &rPath, BuilderData *pData, unsigned instance ):
+                        const std::string &rPath, BuilderData *pData ):
     XMLParser( pIntf, rFileName ), m_path( rPath ), m_pData( pData ),
-    m_ownData( pData == NULL ), m_xOffset( 0 ), m_yOffset( 0 ), m_instanceCount( instance )
+    m_ownData( pData == NULL ), m_xOffset( 0 ), m_yOffset( 0 )
 {
     // Make sure the data is allocated
     if( m_pData == NULL )
@@ -64,30 +64,6 @@ inline bool SkinParser::MissingAttr( AttrList_t &attr, const std::string &name,
     return false;
 }
 
-static bool isSubPath( const std::string &base, const std::string &path, const std::string &dirsep )
-{
-    char *baseReal = realpath( base.c_str(), NULL );
-    char *pathReal = realpath( path.c_str(), NULL );
-
-    if( !baseReal || !pathReal )
-    {
-        free( baseReal );
-        free( pathReal );
-        return false;
-    }
-
-    std::string basePath = baseReal;
-    std::string subPath = pathReal;
-    free( baseReal );
-    free( pathReal );
-
-    if( basePath.size() < dirsep.size() ||
-        basePath.compare( basePath.size() - dirsep.size(), dirsep.size(), dirsep ) )
-        basePath += dirsep;
-
-    return subPath.compare( 0, basePath.size(), basePath ) == 0;
-}
-
 void SkinParser::handleBeginElement( const std::string &rName, AttrList_t &attr )
 {
 #define RequireAttr( attr, name, a ) \
@@ -95,24 +71,12 @@ void SkinParser::handleBeginElement( const std::string &rName, AttrList_t &attr 
 
     if( rName == "Include" )
     {
-        if( m_instanceCount >= 4 )
-        {
-            m_errors = true;
-            return;
-        }
         RequireAttr( attr, rName, "file" );
 
         OSFactory *pFactory = OSFactory::instance( getIntf() );
         std::string fullPath = m_path + pFactory->getDirSeparator() + attr["file"];
-        if( !isSubPath( m_path, fullPath, pFactory->getDirSeparator() ) )
-        {
-            msg_Err( getIntf(), "bad theme: Include escapes theme directory: %s",
-                     attr["file"] );
-            m_errors = true;
-            return;
-        }
         msg_Dbg( getIntf(), "opening included XML file: %s", fullPath.c_str() );
-        SkinParser subParser( getIntf(), fullPath.c_str(), m_path, m_pData, m_instanceCount + 1 );
+        SkinParser subParser( getIntf(), fullPath.c_str(), m_path, m_pData );
         subParser.parse();
     }
 

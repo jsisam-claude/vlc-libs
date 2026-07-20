@@ -24,8 +24,6 @@ MIN_M4=1.4.16
 MIN_MESON=0.60.0
 MIN_NASM=2.15
 MIN_PROTOC=3.4.0
-MIN_NINJA=1.13.0
-MIN_ZSTD=1.2.0
 
 export LC_ALL=
 FOUND=
@@ -69,75 +67,14 @@ check_version_majmin() {
 
 }
 
-check() {
-if ! $1 --version >/dev/null 2>&1 && ! $1 -version >/dev/null 2>&1
-then
-    echo "$1 not found"
-    NEEDED="$NEEDED $1"
-else
-    # found, need to check version ?
-    if [ -z "$2" ];then
-        FOUND="$FOUND $1"
-    else
-        gotver=`$1 --version | head -1 | grep -o '[0-9]\+\.[0-9]\+\(\.[0-9]\+\)\?' | head -1`
-        check_version $1 $gotver $2
-    fi
-fi
-}
-
 check_tar() {
-if ! { check_tar_autocompress && check_tar_xz && check_tar_zstd ; }
+if ! tar PcJ /dev/null >/dev/null 2>&1 && ! tar PcJf /dev/null /dev/null 2>&1
 then
+    echo "tar doesn't support xz (J option)"
     NEEDED="$NEEDED tar"
 else
     FOUND="$FOUND tar"
 fi
-}
-
-check_tar_autocompress() {
-tmp="check_tar"
-ret=0
-echo "Hello Cone" > "$tmp"
-if ! ( tar -caf "$tmp.tar.gz" "$tmp" && tar xfo "$tmp.tar.gz" )
-then
-    echo "tar can't auto-detect compression"
-    ret=1
-fi
-rm -f "$tmp" "$tmp.tar.gz" 2>/dev/null
-return "$ret"
-}
-
-check_tar_xz() {
-if ! tar PcJ /dev/null >/dev/null 2>&1 && ! tar PcJf /dev/null /dev/null 2>&1
-then
-    echo "tar doesn't support xz (J option)"
-    return 1
-fi
-return 0
-}
-
-check_tar_zstd() {
-output="$(tar Pc --zstd /dev/null 2>&1 >/dev/null)"
-ret="$?"
-case "$output" in
-    *"unrecognized option"*|*"not supported"*)
-        echo "tar doesn't support zstd"
-        return 1
-        ;;
-    *"not found"*|*"Can't launch external program"*)
-        echo "tar is new enough but zstd not installed"
-        NEEDED="$NEEDED zstd"
-        return 0
-        ;;
-    *)
-        if [ "$ret" -gt 0 ]; then
-            echo "tar has some unspecific error with zstd"
-            return 1
-        else
-            return 0
-        fi
-        ;;
-esac
 }
 
 check_sed() {
@@ -170,35 +107,39 @@ fi
 }
 
 check_ninja() {
-# with GNU make 4.4 we should use ninja 1.13.x and above
-# otherwise we must use the patched version from kitware
-
-isgnu=$(make -v | head -1 | cut -d ' ' -f 1)
-if [ "$isgnu" = "GNU" ];
+if ! ninja --version >/dev/null 2>&1
 then
-    gotver=$(make -v | head -1 | cut -d ' ' -f 3)
-    gotmajor=$(echo $gotver|cut -d. -f1)
-    gotminor=$(echo $gotver|cut -d. -f2)
-fi
-if [ 4 -lt $gotmajor ] ||
-   [ 4 -eq $gotmajor ] && [ 4 -le $gotminor ];
-then
-    # GNU Make 4.4+
-    check ninja $1
+    echo "ninja not found"
+    NEEDED="$NEEDED ninja"
 else
-    if ! ninja --version >/dev/null 2>&1
-    then
-        echo "ninja not found"
+    jobserver=`ninja --version | head -1 | grep .jobserver`
+    if [ -z "$jobserver" ]; then
+        echo "ninja missing jobserver support"
         NEEDED="$NEEDED ninja"
     else
-        jobserver=$(ninja --version | head -1 | grep .jobserver)
-        if [ -z "$jobserver" ]; then
-            echo "ninja missing jobserver support"
-            NEEDED="$NEEDED ninja"
+        # found, need to check version ?
+        if [ -z "$1" ];then
+            FOUND="$FOUND ninja"
         else
-            # check the known working jobserver kitware version
-            check ninja 1.11.1
+            gotver=`ninja --version | head -1 | sed s/'.* '//`
+            check_version ninja $gotver $1
         fi
+    fi
+fi
+}
+
+check() {
+if ! $1 --version >/dev/null 2>&1 && ! $1 -version >/dev/null 2>&1
+then
+    echo "$1 not found"
+    NEEDED="$NEEDED $1"
+else
+    # found, need to check version ?
+    if [ -z "$2" ];then
+        FOUND="$FOUND $1"
+    else
+        gotver=`$1 --version | head -1 | grep -o '[0-9]\+\.[0-9]\+\(\.[0-9]\+\)\?' | head -1`
+        check_version $1 $gotver $2
     fi
 fi
 }
@@ -235,9 +176,8 @@ check flex
 check_nasm $MIN_NASM
 check help2man
 check meson $MIN_MESON
-check_ninja $MIN_NINJA
+check_ninja
 check gettext
-check zstd $MIN_ZSTD
 
 DEPS_ONLY="help2man"
 
