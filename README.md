@@ -35,6 +35,45 @@ hash-verified **source archives** that the projects compile themselves.
 `libvlcjni/vlc → ../../vlc-libs/vlc` and its build reads contrib tarballs via
 `TARBALLS=$PWD/../vlc-libs/contrib-tarballs`.
 
+## Build inputs are vendored and committed
+
+`contrib-tarballs/` — the full dependency-correct set of ~50 contrib source
+archives (the fork's kept features pull these: decoders + libass/freetype/
+fribidi/harfbuzz subtitle stack, gnutls+nettle+gmp+gcrypt+gpg-error+libtasn1
+TLS, smb2/nfs/libdsm/upnp/microdns browsing+casting, taglib, lua, zlib, image
+and audio codecs). Every archive is SHA-512-verified against the sums in
+`vlc/contrib/src/*/SHA512SUMS`. This supersedes the earlier "13 packages"
+framing: VLC's dependency graph makes that unbuildable, but the ~50-set still
+reflects the real pruning — dav1d, libvpx, x264/x265, dvdnav/dvdread, live555,
+bluray, mad, aom, lame and the other encoders/disc/streaming libs are gone.
+
+`host-tools/` — source archives for the four host build tools VLC bootstraps
+itself (libtool, protobuf 3.4.1 for casting, apache-ant, help2man) plus
+gettext/ninja fallbacks. Everything else (autoconf, automake, cmake, meson,
+nasm, m4, pkg-config) is satisfied from the distro per the toolchain boundary.
+
+`place-build-inputs.sh` — copies both sets into the vlc tree where the
+contrib/tools makefiles hard-expect them (they use `:=` tarball dirs, so an
+env override is not enough). Run it before building.
+
+The vendored VLC tree also carries one build-compat patch beyond the 20-patch
+Android stack (recorded in `vlc/.patched`): `-DCMAKE_POLICY_DEFAULT_CMP0057=NEW`
+in the contrib CMake invocation, needed for NDK 27's toolchain file with
+CMake 3.28.
+
+### Native-build status (honest)
+
+The app/JVM layer — where every telemetry and feature change lives — compiles
+cleanly. The native contrib+libvlc build was driven far in-sandbox (NDK 27,
+arm64): the vendored VLC source + patches configure, the guards prevent all
+clones/downloads, the host-tool bootstrap builds from the vendored sources,
+and the CMake-based contribs build after the CMP0057 fix. Remaining failures
+(gnutls "cannot compile and link", harfbuzz depfile races) are
+incompatibilities between VLC 3.0.x-era contribs and this newer NDK/host-tool
+combination — the reason VLC's own buildbot pins an exact toolchain. Building
+on the VLC-tested toolchain versions is expected to close these; nothing here
+is a defect in the vendored sources.
+
 ## Populating the contrib cache (one-time)
 
 ```sh

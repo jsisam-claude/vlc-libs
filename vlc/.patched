@@ -19,3 +19,4 @@ source: libvlcjni@81bb02ba48dcad32550e0626139a387b3c30af04 libvlc/patches
 0018-smb2-use-the-cache-helper.patch
 0019-upnp-android-implement-net-intf-priority.patch
 0020-upnp-add-and-use-a-callback-listener-interface.patch
+contrib/src/main.mak: -DCMAKE_POLICY_DEFAULT_CMP0057=NEW (NDK27/cmake3.28 IN_LIST compat)

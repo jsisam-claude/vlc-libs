@@ -447,6 +447,7 @@ CMAKEBUILD = env cmake --build $(BUILD_DIR)
 CMAKEINSTALL = env cmake --install $(BUILD_DIR) --prefix $(PREFIX)
 CMAKECLEAN = rm -f $(BUILD_DIR)/CMakeCache.txt
 CMAKE = cmake -S $< -DCMAKE_TOOLCHAIN_FILE=$(abspath toolchain.cmake) \
+	-DCMAKE_POLICY_DEFAULT_CMP0057=NEW \
 		-B $(BUILD_DIR) \
 		-DCMAKE_POSITION_INDEPENDENT_CODE=ON \
 		-DCMAKE_INSTALL_PREFIX:STRING=$(PREFIX) \
